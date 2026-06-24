@@ -1,0 +1,13 @@
+# Netlify deployment config for the web build of the dashboard.
+# Note: this hosts the UI in mock-data mode. The direct-PostgreSQL data source
+# only works in the Electron desktop app (a browser cannot open a raw DB socket).
+
+[build]
+  command = "npm run build:web"
+  publish = "dist"
+
+# SPA fallback so client-side routes (/dashboard, /settings) work on refresh.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
