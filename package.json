@@ -5,6 +5,7 @@
   "type": "module",
   "main": "electron/main.cjs",
   "description": "Generic database explorer admin dashboard (Electron + React) that connects directly to any PostgreSQL.",
+  "author": "Harpalsinh Jadav",
   "scripts": {
     "dev": "concurrently -k -n vite,electron -c blue,green \"npm:dev:vite\" \"npm:dev:electron\"",
     "dev:vite": "vite",
@@ -14,7 +15,35 @@
     "build:web": "cross-env BUILD_TARGET=web vite build",
     "start": "electron .",
     "preview": "vite preview",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "dist:mac": "npm run build && electron-builder --mac dmg",
+    "dist:mac:universal": "npm run build && electron-builder --mac dmg --universal"
+  },
+  "build": {
+    "appId": "com.dbexplorer.app",
+    "productName": "DB Explorer",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "mac": {
+      "category": "public.app-category.developer-tools",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": "arm64"
+        }
+      ],
+      "identity": null
+    },
+    "dmg": {
+      "title": "${productName}"
+    }
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
@@ -37,6 +66,7 @@
     "concurrently": "^9.1.0",
     "cross-env": "^7.0.3",
     "electron": "^33.2.0",
+    "electron-builder": "^25.1.8",
     "eslint": "^9.14.0",
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^5.0.0",
