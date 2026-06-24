@@ -1,0 +1,482 @@
+[
+  {
+    "id": 1,
+    "name": "Router X",
+    "category": "Furniture",
+    "price": 836.53,
+    "in_stock": true,
+    "created_at": "2024-12-12T23:12:21.490Z"
+  },
+  {
+    "id": 2,
+    "name": "27\" Monitor Max",
+    "category": "Peripherals",
+    "price": 434.95,
+    "in_stock": true,
+    "created_at": "2023-11-09T03:14:28.992Z"
+  },
+  {
+    "id": 3,
+    "name": "Docking Station Max",
+    "category": "Storage",
+    "price": 636.43,
+    "in_stock": true,
+    "created_at": "2023-09-21T03:59:08.175Z"
+  },
+  {
+    "id": 4,
+    "name": "Mechanical Keyboard Pro",
+    "category": "Peripherals",
+    "price": 508.26,
+    "in_stock": true,
+    "created_at": "2023-11-10T21:44:19.759Z"
+  },
+  {
+    "id": 5,
+    "name": "Webcam HD Lite",
+    "category": "Displays",
+    "price": 563.35,
+    "in_stock": false,
+    "created_at": "2024-08-18T20:24:19.114Z"
+  },
+  {
+    "id": 6,
+    "name": "Smartphone Dock Mini",
+    "category": "Peripherals",
+    "price": 401.46,
+    "in_stock": true,
+    "created_at": "2024-10-17T14:46:04.260Z"
+  },
+  {
+    "id": 7,
+    "name": "Noise-Cancel Headphones X",
+    "category": "Audio",
+    "price": 438.91,
+    "in_stock": false,
+    "created_at": "2024-01-03T08:51:10.492Z"
+  },
+  {
+    "id": 8,
+    "name": "Router Max",
+    "category": "Displays",
+    "price": 536.16,
+    "in_stock": true,
+    "created_at": "2024-08-27T00:05:16.057Z"
+  },
+  {
+    "id": 9,
+    "name": "Laptop Stand Mini",
+    "category": "Accessories",
+    "price": 149.74,
+    "in_stock": true,
+    "created_at": "2024-08-10T01:24:16.616Z"
+  },
+  {
+    "id": 10,
+    "name": "Laptop Stand X",
+    "category": "Furniture",
+    "price": 120.65,
+    "in_stock": true,
+    "created_at": "2024-07-27T20:42:13.674Z"
+  },
+  {
+    "id": 11,
+    "name": "Ergonomic Chair Pro",
+    "category": "Peripherals",
+    "price": 430.67,
+    "in_stock": false,
+    "created_at": "2024-08-08T06:55:24.957Z"
+  },
+  {
+    "id": 12,
+    "name": "Wireless Mouse Max",
+    "category": "Peripherals",
+    "price": 402.55,
+    "in_stock": true,
+    "created_at": "2023-09-18T13:22:48.028Z"
+  },
+  {
+    "id": 13,
+    "name": "Microphone X",
+    "category": "Storage",
+    "price": 785.3,
+    "in_stock": true,
+    "created_at": "2023-09-29T17:26:28.137Z"
+  },
+  {
+    "id": 14,
+    "name": "External SSD Lite",
+    "category": "Displays",
+    "price": 755.12,
+    "in_stock": true,
+    "created_at": "2023-10-23T13:44:08.869Z"
+  },
+  {
+    "id": 15,
+    "name": "Microphone Lite",
+    "category": "Accessories",
+    "price": 24.56,
+    "in_stock": true,
+    "created_at": "2023-01-17T01:02:01.885Z"
+  },
+  {
+    "id": 16,
+    "name": "Ergonomic Chair X",
+    "category": "Accessories",
+    "price": 123.24,
+    "in_stock": true,
+    "created_at": "2024-06-12T17:40:22.766Z"
+  },
+  {
+    "id": 17,
+    "name": "Smartphone Dock Max",
+    "category": "Displays",
+    "price": 841.38,
+    "in_stock": true,
+    "created_at": "2023-02-13T04:57:57.394Z"
+  },
+  {
+    "id": 18,
+    "name": "27\" Monitor Pro",
+    "category": "Furniture",
+    "price": 721.16,
+    "in_stock": true,
+    "created_at": "2023-06-23T12:32:41.041Z"
+  },
+  {
+    "id": 19,
+    "name": "Power Bank Max",
+    "category": "Audio",
+    "price": 439.63,
+    "in_stock": true,
+    "created_at": "2023-05-04T23:43:47.940Z"
+  },
+  {
+    "id": 20,
+    "name": "External SSD X",
+    "category": "Peripherals",
+    "price": 318.98,
+    "in_stock": true,
+    "created_at": "2023-01-21T22:29:37.063Z"
+  },
+  {
+    "id": 21,
+    "name": "Desk Lamp Pro",
+    "category": "Displays",
+    "price": 847.43,
+    "in_stock": true,
+    "created_at": "2023-08-20T11:07:54.140Z"
+  },
+  {
+    "id": 22,
+    "name": "Ergonomic Chair Max",
+    "category": "Displays",
+    "price": 177.33,
+    "in_stock": true,
+    "created_at": "2023-08-17T05:16:54.973Z"
+  },
+  {
+    "id": 23,
+    "name": "Power Bank Lite",
+    "category": "Furniture",
+    "price": 314.19,
+    "in_stock": true,
+    "created_at": "2023-11-22T18:17:03.317Z"
+  },
+  {
+    "id": 24,
+    "name": "Router Pro",
+    "category": "Audio",
+    "price": 602.28,
+    "in_stock": false,
+    "created_at": "2024-10-25T01:52:11.537Z"
+  },
+  {
+    "id": 25,
+    "name": "Network Switch Max",
+    "category": "Peripherals",
+    "price": 511.67,
+    "in_stock": true,
+    "created_at": "2024-03-29T14:19:20.008Z"
+  },
+  {
+    "id": 26,
+    "name": "Cable Organizer Mini",
+    "category": "Storage",
+    "price": 309.67,
+    "in_stock": true,
+    "created_at": "2023-11-15T04:17:21.929Z"
+  },
+  {
+    "id": 27,
+    "name": "Wireless Mouse Plus",
+    "category": "Storage",
+    "price": 757.97,
+    "in_stock": false,
+    "created_at": "2024-04-19T01:52:00.046Z"
+  },
+  {
+    "id": 28,
+    "name": "Docking Station Pro",
+    "category": "Furniture",
+    "price": 355.34,
+    "in_stock": true,
+    "created_at": "2024-08-06T06:05:06.827Z"
+  },
+  {
+    "id": 29,
+    "name": "Noise-Cancel Headphones Lite",
+    "category": "Storage",
+    "price": 710.14,
+    "in_stock": true,
+    "created_at": "2024-12-01T05:31:16.544Z"
+  },
+  {
+    "id": 30,
+    "name": "Bluetooth Speaker X",
+    "category": "Peripherals",
+    "price": 884.85,
+    "in_stock": true,
+    "created_at": "2023-01-10T09:26:07.745Z"
+  },
+  {
+    "id": 31,
+    "name": "Standing Desk X",
+    "category": "Networking",
+    "price": 832.13,
+    "in_stock": true,
+    "created_at": "2024-06-24T17:08:46.522Z"
+  },
+  {
+    "id": 32,
+    "name": "USB-C Hub X",
+    "category": "Furniture",
+    "price": 135.29,
+    "in_stock": false,
+    "created_at": "2024-05-29T02:52:02.200Z"
+  },
+  {
+    "id": 33,
+    "name": "Wireless Mouse Lite",
+    "category": "Peripherals",
+    "price": 547.89,
+    "in_stock": true,
+    "created_at": "2023-05-13T12:23:41.314Z"
+  },
+  {
+    "id": 34,
+    "name": "Microphone Pro",
+    "category": "Displays",
+    "price": 40.59,
+    "in_stock": true,
+    "created_at": "2023-03-13T22:38:34.375Z"
+  },
+  {
+    "id": 35,
+    "name": "Graphics Tablet Lite",
+    "category": "Displays",
+    "price": 731.06,
+    "in_stock": true,
+    "created_at": "2023-04-16T12:14:51.296Z"
+  },
+  {
+    "id": 36,
+    "name": "Microphone Pro",
+    "category": "Furniture",
+    "price": 351.37,
+    "in_stock": true,
+    "created_at": "2024-12-12T05:13:59.669Z"
+  },
+  {
+    "id": 37,
+    "name": "Network Switch Plus",
+    "category": "Accessories",
+    "price": 854.07,
+    "in_stock": true,
+    "created_at": "2023-05-12T19:36:26.952Z"
+  },
+  {
+    "id": 38,
+    "name": "Bluetooth Speaker Pro",
+    "category": "Networking",
+    "price": 407.5,
+    "in_stock": true,
+    "created_at": "2023-03-25T22:52:23.875Z"
+  },
+  {
+    "id": 39,
+    "name": "Smartphone Dock Max",
+    "category": "Peripherals",
+    "price": 52.88,
+    "in_stock": true,
+    "created_at": "2023-05-23T00:23:47.628Z"
+  },
+  {
+    "id": 40,
+    "name": "Network Switch Lite",
+    "category": "Accessories",
+    "price": 749.73,
+    "in_stock": true,
+    "created_at": "2024-03-04T01:08:25.626Z"
+  },
+  {
+    "id": 41,
+    "name": "Docking Station Plus",
+    "category": "Audio",
+    "price": 127.65,
+    "in_stock": true,
+    "created_at": "2023-03-09T08:23:42.210Z"
+  },
+  {
+    "id": 42,
+    "name": "USB-C Hub Mini",
+    "category": "Displays",
+    "price": 540.91,
+    "in_stock": true,
+    "created_at": "2023-03-17T08:04:32.649Z"
+  },
+  {
+    "id": 43,
+    "name": "Smartphone Dock X",
+    "category": "Peripherals",
+    "price": 532.94,
+    "in_stock": true,
+    "created_at": "2024-05-10T23:43:04.899Z"
+  },
+  {
+    "id": 44,
+    "name": "Mechanical Keyboard Mini",
+    "category": "Accessories",
+    "price": 397.68,
+    "in_stock": true,
+    "created_at": "2023-07-25T20:01:38.570Z"
+  },
+  {
+    "id": 45,
+    "name": "27\" Monitor Plus",
+    "category": "Networking",
+    "price": 829.13,
+    "in_stock": true,
+    "created_at": "2023-02-27T01:03:04.685Z"
+  },
+  {
+    "id": 46,
+    "name": "27\" Monitor Max",
+    "category": "Audio",
+    "price": 663.95,
+    "in_stock": true,
+    "created_at": "2023-10-30T14:44:14.972Z"
+  },
+  {
+    "id": 47,
+    "name": "Ergonomic Chair Mini",
+    "category": "Accessories",
+    "price": 683.17,
+    "in_stock": true,
+    "created_at": "2023-02-11T02:03:40.530Z"
+  },
+  {
+    "id": 48,
+    "name": "Smartphone Dock Lite",
+    "category": "Audio",
+    "price": 565.56,
+    "in_stock": true,
+    "created_at": "2024-08-28T01:15:15.409Z"
+  },
+  {
+    "id": 49,
+    "name": "Ergonomic Chair Max",
+    "category": "Networking",
+    "price": 145.39,
+    "in_stock": true,
+    "created_at": "2023-06-12T21:58:56.524Z"
+  },
+  {
+    "id": 50,
+    "name": "27\" Monitor Max",
+    "category": "Furniture",
+    "price": 165.56,
+    "in_stock": true,
+    "created_at": "2023-12-18T09:45:21.162Z"
+  },
+  {
+    "id": 51,
+    "name": "Microphone Pro",
+    "category": "Networking",
+    "price": 80.54,
+    "in_stock": true,
+    "created_at": "2024-01-23T02:35:21.546Z"
+  },
+  {
+    "id": 52,
+    "name": "Network Switch X",
+    "category": "Networking",
+    "price": 257.7,
+    "in_stock": false,
+    "created_at": "2024-09-05T12:20:39.617Z"
+  },
+  {
+    "id": 53,
+    "name": "Webcam HD Plus",
+    "category": "Peripherals",
+    "price": 873.23,
+    "in_stock": true,
+    "created_at": "2024-09-17T18:37:10.283Z"
+  },
+  {
+    "id": 54,
+    "name": "Wireless Mouse X",
+    "category": "Accessories",
+    "price": 212.02,
+    "in_stock": true,
+    "created_at": "2024-09-30T15:19:59.795Z"
+  },
+  {
+    "id": 55,
+    "name": "Network Switch Lite",
+    "category": "Peripherals",
+    "price": 408.55,
+    "in_stock": true,
+    "created_at": "2023-06-07T06:42:49.073Z"
+  },
+  {
+    "id": 56,
+    "name": "Webcam HD Lite",
+    "category": "Peripherals",
+    "price": 602.16,
+    "in_stock": true,
+    "created_at": "2023-01-03T16:19:27.182Z"
+  },
+  {
+    "id": 57,
+    "name": "External SSD Pro",
+    "category": "Accessories",
+    "price": 394.84,
+    "in_stock": true,
+    "created_at": "2024-09-24T19:12:06.215Z"
+  },
+  {
+    "id": 58,
+    "name": "Microphone Lite",
+    "category": "Displays",
+    "price": 68.29,
+    "in_stock": true,
+    "created_at": "2024-01-01T01:19:01.332Z"
+  },
+  {
+    "id": 59,
+    "name": "Microphone Lite",
+    "category": "Audio",
+    "price": 394.02,
+    "in_stock": true,
+    "created_at": "2024-04-27T01:47:17.729Z"
+  },
+  {
+    "id": 60,
+    "name": "USB-C Hub X",
+    "category": "Peripherals",
+    "price": 269.95,
+    "in_stock": true,
+    "created_at": "2024-08-25T13:15:07.436Z"
+  }
+]
