@@ -218,6 +218,41 @@ store and login UI depend only on this module's interface.
 
 ---
 
+## Building & distributing the macOS app
+
+```bash
+npm run dist:mac            # arm64 (Apple Silicon) DMG -> release/
+npm run dist:mac:universal  # universal (Intel + Apple Silicon) DMG
+```
+
+The output is `release/DB Explorer-<version>-arm64.dmg`.
+
+### "DB Explorer is damaged and can't be opened" on other Macs
+
+This is **Gatekeeper**, not a real corruption. The app is **ad-hoc signed but
+not notarized**, so macOS blocks it on machines other than the one that built
+it (the downloaded DMG is quarantined). The build re-signs the bundle with a
+valid ad-hoc signature (`build/after-pack.cjs`), which downgrades the scary
+"damaged" error to the normal "unidentified developer" prompt. To open it:
+
+- **Right-click** the app in Applications → **Open** → **Open**, or
+- Clear the quarantine flag once, from Terminal:
+
+  ```bash
+  xattr -cr "/Applications/DB Explorer.app"
+  ```
+
+### Distributing with zero warnings (Developer ID + notarization)
+
+For a DMG that opens with no prompts on any Mac, sign with an Apple **Developer
+ID Application** certificate and notarize (requires the paid Apple Developer
+Program). Then, in `package.json` → `build.mac`, remove `"identity": null`, add
+hardened-runtime entitlements, and notarize with your Apple credentials
+(`APPLE_ID`, `APPLE_APP_SPECIFIC_PASSWORD`, `APPLE_TEAM_ID`) — e.g. via
+`@electron/notarize` in an `afterSign` hook. Ask and this can be wired up.
+
+---
+
 ## Regenerating mock data
 
 ```bash

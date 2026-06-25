@@ -22,6 +22,7 @@
   "build": {
     "appId": "com.dbexplorer.app",
     "productName": "DB Explorer",
+    "afterPack": "build/after-pack.cjs",
     "directories": {
       "output": "release",
       "buildResources": "build"
