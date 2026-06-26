@@ -16,8 +16,10 @@
     "start": "electron .",
     "preview": "vite preview",
     "lint": "eslint .",
-    "dist:mac": "npm run build && electron-builder --mac dmg",
-    "dist:mac:universal": "npm run build && electron-builder --mac dmg --universal"
+    "dist:mac": "npm run build && electron-builder --mac dmg --x64 --arm64",
+    "dist:mac:universal": "npm run build && electron-builder --mac dmg --universal",
+    "dist:win": "npm run build && electron-builder --win nsis --x64 --ia32",
+    "dist:all": "npm run build && electron-builder --mac dmg --win nsis --x64 --arm64 --ia32"
   },
   "build": {
     "appId": "com.dbexplorer.app",
@@ -35,15 +37,27 @@
     "mac": {
       "category": "public.app-category.developer-tools",
       "target": [
-        {
-          "target": "dmg",
-          "arch": "arm64"
-        }
+        { "target": "dmg", "arch": ["x64", "arm64"] }
       ],
       "identity": null
     },
     "dmg": {
       "title": "${productName}"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64", "ia32"]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
     }
   },
   "dependencies": {
