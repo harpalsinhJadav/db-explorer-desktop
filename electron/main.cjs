@@ -9,8 +9,26 @@
  * All database access lives here: connect, schema introspection, and CRUD via
  * parameterized SQL. Identifiers are validated and quoted to avoid injection.
  */
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, protocol, net } = require('electron');
 const path = require('node:path');
+const fs = require('node:fs');
+const url = require('node:url');
+
+// Register "app" as a standard, secure origin BEFORE app is ready so that
+// Chromium grants it the same privileges as https://.  This prevents the
+// "crossorigin" CORS rejection that Chromium applies to file:// module scripts
+// and also makes BrowserRouter's pushState navigation work on all platforms.
+protocol.registerSchemesAsPrivileged([
+  {
+    scheme: 'app',
+    privileges: {
+      standard: true,
+      secure: true,
+      supportFetchAPI: true,
+      corsEnabled: true,
+    },
+  },
+]);
 const { Pool, types } = require('pg');
 
 // node-pg returns numeric/bigint as strings to preserve precision. For a UI
@@ -280,11 +298,30 @@ function createWindow() {
     win.loadURL(devUrl);
     win.webContents.openDevTools({ mode: 'detach' });
   } else {
-    win.loadFile(path.join(__dirname, '..', 'dist', 'index.html'));
+    // Use the custom app:// protocol so the renderer has a real HTTPS-like
+    // origin. This prevents Chromium from rejecting crossorigin module scripts
+    // (a known white-screen issue on Windows with file:// URLs) and lets
+    // BrowserRouter's pushState navigation work on all platforms.
+    win.loadURL('app://localhost/index.html');
   }
 }
 
 app.whenReady().then(() => {
+  // Serve the built Vite output from dist/ via app://localhost/.
+  // Every request that doesn't match a real file (e.g. /dashboard, /settings)
+  // falls back to index.html so BrowserRouter can handle client-side routing.
+  const distRoot = path.join(__dirname, '..', 'dist');
+  protocol.handle('app', (req) => {
+    const { pathname } = new url.URL(req.url);
+    const filePath = path.join(distRoot, pathname);
+    // If the file exists on disk serve it directly; otherwise serve index.html
+    // so the React router can handle the path.
+    const target = fs.existsSync(filePath) && fs.statSync(filePath).isFile()
+      ? filePath
+      : path.join(distRoot, 'index.html');
+    return net.fetch(url.pathToFileURL(target).toString());
+  });
+
   createWindow();
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
