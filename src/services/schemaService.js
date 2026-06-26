@@ -12,6 +12,9 @@
  *
  * Both backends implement the same interface, so UI components never change —
  * flipping the data source in Settings is enough to go live.
+ *
+ * Schema-aware API: all table operations accept `schema` as the first
+ * argument. The mock backend ignores it (mock data has no schema concept).
  */
 
 import { mockDb, PRIMARY_KEY } from '../mock-data/mockDb';
@@ -24,33 +27,38 @@ const delay = (ms = 300) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // ---------------------------------------------------------------------------
 // Mock backend — localStorage-backed, always available offline.
+// Schema parameter is accepted but ignored; mock data lives in a flat namespace.
 // ---------------------------------------------------------------------------
 const mockBackend = {
-  async getTables() {
+  async getSchemas() {
+    await delay();
+    return ['public'];
+  },
+  async getTables(_schema) {
     await delay();
     return mockDb.listTables();
   },
-  async getTableSchema(table) {
+  async getTableSchema(_schema, table) {
     await delay();
     return mockDb.schema(table);
   },
-  async getTableData(table) {
+  async getTableData(_schema, table) {
     await delay();
     return mockDb.getRows(table);
   },
-  async insertRecord(table, record) {
+  async insertRecord(_schema, table, record) {
     await delay();
     return mockDb.insert(table, record);
   },
-  async updateRecord(table, id, changes) {
+  async updateRecord(_schema, table, id, changes) {
     await delay();
     return mockDb.update(table, id, changes);
   },
-  async deleteRecords(table, ids) {
+  async deleteRecords(_schema, table, ids) {
     await delay();
     return mockDb.remove(table, ids);
   },
-  async resetTable(table) {
+  async resetTable(_schema, table) {
     await delay();
     return mockDb.reset(table);
   },
@@ -88,29 +96,33 @@ async function ensureConnected() {
 }
 
 const postgresBackend = {
-  async getTables() {
+  async getSchemas() {
     await ensureConnected();
-    return dbApi().getTables();
+    return dbApi().getSchemas();
   },
-  async getTableSchema(table) {
+  async getTables(schema) {
     await ensureConnected();
-    return dbApi().getTableSchema(table);
+    return dbApi().getTables(schema);
   },
-  async getTableData(table) {
+  async getTableSchema(schema, table) {
     await ensureConnected();
-    return dbApi().getTableData(table);
+    return dbApi().getTableSchema(schema, table);
   },
-  async insertRecord(table, record) {
+  async getTableData(schema, table) {
     await ensureConnected();
-    return dbApi().insertRecord(table, record);
+    return dbApi().getTableData(schema, table);
   },
-  async updateRecord(table, id, changes) {
+  async insertRecord(schema, table, record) {
     await ensureConnected();
-    return dbApi().updateRecord(table, id, changes);
+    return dbApi().insertRecord(schema, table, record);
   },
-  async deleteRecords(table, ids) {
+  async updateRecord(schema, table, id, changes) {
     await ensureConnected();
-    return dbApi().deleteRecords(table, ids);
+    return dbApi().updateRecord(schema, table, id, changes);
+  },
+  async deleteRecords(schema, table, ids) {
+    await ensureConnected();
+    return dbApi().deleteRecords(schema, table, ids);
   },
   async resetTable() {
     throw new Error('Reset is only available for the mock data source.');
@@ -131,6 +143,7 @@ function backend() {
 }
 
 export const schemaService = {
+  getSchemas: (...args) => backend().getSchemas(...args),
   getTables: (...args) => backend().getTables(...args),
   getTableSchema: (...args) => backend().getTableSchema(...args),
   getTableData: (...args) => backend().getTableData(...args),

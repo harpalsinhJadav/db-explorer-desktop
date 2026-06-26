@@ -19,16 +19,21 @@ import { useSettingsStore } from '../../store/settingsStore';
  * Dashboard
  * ---------
  * Orchestrates the explorer:
- *   1. loads the table list (sidebar)
- *   2. on table selection: loads schema -> builds columns -> loads data
- *   3. renders a single, generic DataGrid that supports full CRUD
+ *   1. loads the pg schema list (sidebar dropdown)
+ *   2. on schema selection: loads the table list for that schema
+ *   3. on table selection: loads schema -> builds columns -> loads data
+ *   4. renders a single, generic DataGrid that supports full CRUD
  *
- * All data access (reads and writes) goes through schemaService, so nothing
- * here knows or cares whether the data is mock or a real API.
+ * All data access goes through schemaService; nothing here cares whether
+ * the data is mock or a real PostgreSQL database.
  */
 export default function Dashboard() {
+  const [schemas, setSchemas] = useState([]);
+  const [selectedSchema, setSelectedSchema] = useState('public');
+  const [schemasLoading, setSchemasLoading] = useState(true);
+
   const [tables, setTables] = useState([]);
-  const [tablesLoading, setTablesLoading] = useState(true);
+  const [tablesLoading, setTablesLoading] = useState(false);
 
   const [selectedTable, setSelectedTable] = useState(null);
   const [schema, setSchema] = useState([]);
@@ -42,7 +47,6 @@ export default function Dashboard() {
 
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  // Which backend is active (mock vs live PostgreSQL) — configured in Settings.
   const dataSource = useSettingsStore((s) => s.dataSource);
 
   const notify = useCallback(
@@ -50,13 +54,39 @@ export default function Dashboard() {
     []
   );
 
-  // 1. Load the list of tables once on mount.
+  // 1. Load available schemas once on mount.
   useEffect(() => {
     let active = true;
     (async () => {
       try {
+        setSchemasLoading(true);
+        const list = await schemaService.getSchemas();
+        if (!active) return;
+        setSchemas(list);
+        // Default to 'public' if present, otherwise the first schema.
+        const initial = list.includes('public') ? 'public' : list[0] ?? 'public';
+        setSelectedSchema(initial);
+      } catch (err) {
+        if (active) setError(err.message || 'Failed to load schemas.');
+      } finally {
+        if (active) setSchemasLoading(false);
+      }
+    })();
+    return () => { active = false; };
+  }, []);
+
+  // 2. Load tables whenever the selected schema changes.
+  useEffect(() => {
+    if (!selectedSchema) return;
+    let active = true;
+    (async () => {
+      try {
         setTablesLoading(true);
-        const list = await schemaService.getTables();
+        setSelectedTable(null);
+        setRowData([]);
+        setColumnDefs([]);
+        setError(null);
+        const list = await schemaService.getTables(selectedSchema);
         if (!active) return;
         setTables(list);
         if (list.length > 0) setSelectedTable(list[0]);
@@ -66,38 +96,43 @@ export default function Dashboard() {
         if (active) setTablesLoading(false);
       }
     })();
-    return () => {
-      active = false;
-    };
-  }, []);
+    return () => { active = false; };
+  }, [selectedSchema]);
 
   // Reusable loader: schema -> columns -> data for the current table.
-  const loadTable = useCallback(async (table, { withSchema = true } = {}) => {
-    setTableLoading(true);
-    setError(null);
-    try {
-      if (withSchema) {
-        const tableSchema = await schemaService.getTableSchema(table);
-        const pk = findPrimaryKey(tableSchema);
-        setSchema(tableSchema);
-        setPrimaryKey(pk);
-        setColumnDefs(buildColumnDefs(tableSchema, pk));
+  const loadTable = useCallback(
+    async (pgSchema, table, { withSchema = true } = {}) => {
+      setTableLoading(true);
+      setError(null);
+      try {
+        if (withSchema) {
+          const tableSchema = await schemaService.getTableSchema(pgSchema, table);
+          const pk = findPrimaryKey(tableSchema);
+          setSchema(tableSchema);
+          setPrimaryKey(pk);
+          setColumnDefs(buildColumnDefs(tableSchema, pk));
+        }
+        const data = await schemaService.getTableData(pgSchema, table);
+        setRowData(data);
+      } catch (err) {
+        setError(err.message || 'Failed to load table.');
+        setColumnDefs([]);
+        setRowData([]);
+      } finally {
+        setTableLoading(false);
       }
-      const data = await schemaService.getTableData(table);
-      setRowData(data);
-    } catch (err) {
-      setError(err.message || 'Failed to load table.');
-      setColumnDefs([]);
-      setRowData([]);
-    } finally {
-      setTableLoading(false);
-    }
-  }, []);
+    },
+    []
+  );
 
-  // 2 + 3. Load whenever the selected table changes.
+  // 3. Load whenever the selected table changes.
   useEffect(() => {
-    if (selectedTable) loadTable(selectedTable);
-  }, [selectedTable, loadTable]);
+    if (selectedTable) loadTable(selectedSchema, selectedTable);
+  }, [selectedTable, selectedSchema, loadTable]);
+
+  const handleSelectSchema = useCallback((pgSchema) => {
+    setSelectedSchema(pgSchema);
+  }, []);
 
   const handleSelectTable = useCallback((table) => {
     setSelectedTable(table);
@@ -109,68 +144,75 @@ export default function Dashboard() {
   const handleAddRow = useCallback(
     async (record) => {
       try {
-        await schemaService.insertRecord(selectedTable, record);
-        await loadTable(selectedTable, { withSchema: false });
+        await schemaService.insertRecord(selectedSchema, selectedTable, record);
+        await loadTable(selectedSchema, selectedTable, { withSchema: false });
         notify('Row added.');
       } catch (err) {
         notify(err.message || 'Failed to add row.', 'error');
-        throw err; // let the dialog stay open on failure
+        throw err;
       }
     },
-    [selectedTable, loadTable, notify]
+    [selectedSchema, selectedTable, loadTable, notify]
   );
 
   const handleUpdateRow = useCallback(
     async (row) => {
       try {
-        // The grid already shows the new value; just persist it.
-        await schemaService.updateRecord(selectedTable, row[primaryKey], row);
+        await schemaService.updateRecord(selectedSchema, selectedTable, row[primaryKey], row);
         notify('Row updated.');
       } catch (err) {
         notify(err.message || 'Failed to update row.', 'error');
-        // Revert by reloading from the source of truth.
-        await loadTable(selectedTable, { withSchema: false });
+        await loadTable(selectedSchema, selectedTable, { withSchema: false });
       }
     },
-    [selectedTable, loadTable, notify, primaryKey]
+    [selectedSchema, selectedTable, loadTable, notify, primaryKey]
   );
 
   const handleDeleteRows = useCallback(
     async (ids) => {
       try {
-        const count = await schemaService.deleteRecords(selectedTable, ids);
-        await loadTable(selectedTable, { withSchema: false });
+        const count = await schemaService.deleteRecords(selectedSchema, selectedTable, ids);
+        await loadTable(selectedSchema, selectedTable, { withSchema: false });
         notify(`Deleted ${count} row${count === 1 ? '' : 's'}.`);
       } catch (err) {
         notify(err.message || 'Failed to delete rows.', 'error');
       }
     },
-    [selectedTable, loadTable, notify]
+    [selectedSchema, selectedTable, loadTable, notify]
   );
 
   const handleResetData = useCallback(async () => {
     try {
-      await schemaService.resetTable(selectedTable);
-      await loadTable(selectedTable, { withSchema: false });
+      await schemaService.resetTable(selectedSchema, selectedTable);
+      await loadTable(selectedSchema, selectedTable, { withSchema: false });
       notify('Table reset to seed data.');
     } catch (err) {
       notify(err.message || 'Failed to reset table.', 'error');
     }
-  }, [selectedTable, loadTable, notify]);
+  }, [selectedSchema, selectedTable, loadTable, notify]);
 
-  // Re-fetch everything from the active data source: table list + current
-  // table's schema and rows. This is what makes a config change in Settings
-  // take effect against the live database on demand.
+  // Re-fetch everything: schema list, table list, and current table data.
   const handleSync = useCallback(async () => {
     setSyncing(true);
     try {
-      const list = await schemaService.getTables();
-      setTables(list);
-      const table = list.includes(selectedTable) ? selectedTable : list[0];
-      if (table !== selectedTable) {
-        setSelectedTable(table); // selection change triggers a full reload
-      } else if (table) {
-        await loadTable(table); // reload schema + data for the same table
+      const schemaList = await schemaService.getSchemas();
+      setSchemas(schemaList);
+
+      const activeSchema = schemaList.includes(selectedSchema)
+        ? selectedSchema
+        : schemaList[0] ?? 'public';
+      if (activeSchema !== selectedSchema) {
+        setSelectedSchema(activeSchema);
+        // The schema-change effect will reload tables automatically.
+      } else {
+        const list = await schemaService.getTables(activeSchema);
+        setTables(list);
+        const table = list.includes(selectedTable) ? selectedTable : list[0];
+        if (table !== selectedTable) {
+          setSelectedTable(table);
+        } else if (table) {
+          await loadTable(activeSchema, table);
+        }
       }
       notify('Synced with data source.');
     } catch (err) {
@@ -178,13 +220,17 @@ export default function Dashboard() {
     } finally {
       setSyncing(false);
     }
-  }, [selectedTable, loadTable, notify]);
+  }, [selectedSchema, selectedTable, loadTable, notify]);
 
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh' }}>
       <Topbar onToggleSidebar={() => setMobileOpen((v) => !v)} />
 
       <Sidebar
+        schemas={schemas}
+        schemasLoading={schemasLoading}
+        selectedSchema={selectedSchema}
+        onSelectSchema={handleSelectSchema}
         tables={tables}
         loading={tablesLoading}
         selectedTable={selectedTable}

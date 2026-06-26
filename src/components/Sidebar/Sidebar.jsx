@@ -10,16 +10,24 @@ import {
   Divider,
   Skeleton,
   CircularProgress,
+  FormControl,
+  Select,
+  MenuItem,
+  InputLabel,
 } from '@mui/material';
-import { TableChartRounded } from '@mui/icons-material';
+import { TableChartRounded, SchemaRounded } from '@mui/icons-material';
 
 const DRAWER_WIDTH = 260;
 
 /**
- * Sidebar with the dynamic table list (loaded from schemaService by the
- * Dashboard and passed down here). Clicking a table notifies the parent.
+ * Sidebar with a schema selector dropdown and the dynamic table list.
+ * Schema and table data are loaded by Dashboard and passed down here.
  */
 export default function Sidebar({
+  schemas,
+  schemasLoading,
+  selectedSchema,
+  onSelectSchema,
   tables,
   loading,
   selectedTable,
@@ -30,7 +38,30 @@ export default function Sidebar({
   const content = (
     <>
       <Toolbar />
-      <Box sx={{ px: 2, py: 1.5 }}>
+
+      {/* Schema selector */}
+      <Box sx={{ px: 2, pt: 1.5, pb: 1 }}>
+        <FormControl fullWidth size="small" disabled={schemasLoading}>
+          <InputLabel id="schema-select-label">Schema</InputLabel>
+          <Select
+            labelId="schema-select-label"
+            value={schemasLoading ? '' : selectedSchema}
+            label="Schema"
+            onChange={(e) => onSelectSchema(e.target.value)}
+            startAdornment={
+              <SchemaRounded sx={{ mr: 0.5, fontSize: 18, color: 'text.secondary' }} />
+            }
+          >
+            {schemas.map((s) => (
+              <MenuItem key={s} value={s}>
+                {s}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
+
+      <Box sx={{ px: 2, pb: 1 }}>
         <Typography
           variant="overline"
           color="text.secondary"
@@ -71,11 +102,10 @@ export default function Sidebar({
               />
             </ListItemButton>
           ))}
-          {tables.length === 0 && (
-            <Box sx={{ p: 2, display: 'flex', gap: 1, alignItems: 'center' }}>
-              <CircularProgress size={16} />
+          {tables.length === 0 && !loading && (
+            <Box sx={{ p: 2 }}>
               <Typography variant="body2" color="text.secondary">
-                No tables found
+                No tables found in this schema.
               </Typography>
             </Box>
           )}

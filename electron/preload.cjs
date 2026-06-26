@@ -23,11 +23,12 @@ contextBridge.exposeInMainWorld('dbApi', {
   connect: (config) => call('db:connect', config),
   testConnection: (config) => call('db:test', config),
 
-  getTables: () => call('db:getTables'),
-  getTableSchema: (table) => call('db:getTableSchema', table),
-  getTableData: (table) => call('db:getTableData', table),
+  getSchemas: () => call('db:getSchemas'),
+  getTables: (schema) => call('db:getTables', schema),
+  getTableSchema: (schema, table) => call('db:getTableSchema', schema, table),
+  getTableData: (schema, table) => call('db:getTableData', schema, table),
 
-  insertRecord: (table, record) => call('db:insert', table, record),
-  updateRecord: (table, id, changes) => call('db:update', table, id, changes),
-  deleteRecords: (table, ids) => call('db:delete', table, ids),
+  insertRecord: (schema, table, record) => call('db:insert', schema, table, record),
+  updateRecord: (schema, table, id, changes) => call('db:update', schema, table, id, changes),
+  deleteRecords: (schema, table, ids) => call('db:delete', schema, table, ids),
 });
